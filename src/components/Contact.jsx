@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "../data/portfolioData";
 import { HiMail, HiPhone, HiLocationMarker, HiPaperAirplane, HiCheckCircle } from "react-icons/hi";
@@ -9,6 +9,26 @@ export default function Contact() {
     const [formErrors, setFormErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [cooldownRemaining, setCooldownRemaining] = useState(0);
+
+    useEffect(() => {
+        const checkCooldown = () => {
+            const lastSub = localStorage.getItem("lastContactSubmission");
+            if (lastSub) {
+                const diff = Date.now() - parseInt(lastSub, 10);
+                const cooldownDuration = 3 * 60 * 1000; // 3 minutes in milliseconds
+                if (diff < cooldownDuration) {
+                    setCooldownRemaining(Math.ceil((cooldownDuration - diff) / 1000));
+                } else {
+                    setCooldownRemaining(0);
+                }
+            }
+        };
+
+        checkCooldown();
+        const interval = setInterval(checkCooldown, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     const validate = () => {
         let errors = {};
@@ -37,6 +57,13 @@ export default function Contact() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Check if there is an active cooldown
+        if (cooldownRemaining > 0) {
+            setFormErrors({ submit: `Please wait ${cooldownRemaining} seconds before sending another message.` });
+            return;
+        }
+
         const errors = validate();
         if (Object.keys(errors).length > 0) {
             setFormErrors(errors);
@@ -52,6 +79,7 @@ export default function Contact() {
             setTimeout(() => {
                 setIsSubmitting(false);
                 setSubmitSuccess(true);
+                localStorage.setItem("lastContactSubmission", Date.now().toString());
                 setFormData({ name: "", email: "", subject: "", message: "" });
                 setTimeout(() => setSubmitSuccess(false), 6050);
             }, 1200);
@@ -78,6 +106,7 @@ export default function Contact() {
             const result = await response.json();
             if (result.success) {
                 setSubmitSuccess(true);
+                localStorage.setItem("lastContactSubmission", Date.now().toString());
                 setFormData({ name: "", email: "", subject: "", message: "" });
                 setTimeout(() => setSubmitSuccess(false), 6050);
             } else {
@@ -351,13 +380,17 @@ export default function Contact() {
                                         {/* Submit Button */}
                                         <button
                                             type="submit"
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || cooldownRemaining > 0}
                                             className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all duration-300 focus:outline-none hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-40 disabled:pointer-events-none group shadow-lg shadow-blue-500/10 hover:shadow-blue-500/25"
                                         >
                                             {isSubmitting ? (
                                                 <>
                                                     <span className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
                                                     Sending Message...
+                                                </>
+                                            ) : cooldownRemaining > 0 ? (
+                                                <>
+                                                    Please wait {Math.floor(cooldownRemaining / 60)}:{(cooldownRemaining % 60).toString().padStart(2, '0')}
                                                 </>
                                             ) : (
                                                 <>
