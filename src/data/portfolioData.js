@@ -48,6 +48,27 @@ export const skills = {
 
 export const projects = [
     {
+        id: "aeromind-ai",
+        title: "AeroMind AI",
+        featured: true,
+        tech: ["React", "Vite", "FastAPI", "PostgreSQL", "Agentic AI", "Ollama", "Qwen3", "MCP", "A2A", "Redis", "Docker"],
+        description: "AeroMind AI is a full-stack airline and travel platform that combines flight booking functionality with Agentic AI. It supports global flight search, seat reservation, baggage management, booking workflows, and concurrency-safe database operations. The platform includes an AI travel assistant powered by Ollama/Qwen3, MCP-based tools for controlled actions, and an A2A multi-agent architecture connecting specialized Flight, Hotel, and Weather agents.",
+        features: [
+            "Global flight search and booking workflow",
+            "Seat reservation with concurrency-safe database handling",
+            "Agentic AI travel assistant powered by Ollama/Qwen3",
+            "MCP-based tools for controlled AI actions",
+            "A2A multi-agent architecture with Flight, Hotel, and Weather agents",
+            "JWT/RBAC-secured FastAPI backend",
+            "PostgreSQL database",
+            "Redis/RQ background processing",
+            "Docker Compose containerization"
+        ],
+        github: "https://github.com/hariri99/aeromind-ai",
+        demo: "",
+        image: "/aeromind-ai.png"
+    },
+    {
         id: "ai-recruitment",
         title: "TalentLink-AI",
         featured: true,
