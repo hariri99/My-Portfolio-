@@ -3,7 +3,7 @@ export const personalInfo = {
     title: "Full Stack Developer",
     tagline: "Computer Science Graduate passionate about building scalable web applications, AI-powered solutions, and modern user experiences.",
     avatarPlaceholder: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300&h=300", // Placeholder avatar
-    resumeUrl: "/Hussam_Hariri-resume_2026.pdf", // Placeholder for CV download
+    resumeUrl: "/Hussam_Hariri-resume_2026.pdf", // Latest resume PDF for download
     email: "hussamhariri99@gmail.com",
     phone: "+961 76890457",
     github: "https://github.com/hariri99",
